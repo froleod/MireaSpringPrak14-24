@@ -1,0 +1,15 @@
+spring:
+  application:
+    name:
+      SpringPrak14
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/MireaCourse
+    username: postgres
+    password: aks
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        hbm2ddl-auto: update
+    show-sql: true
