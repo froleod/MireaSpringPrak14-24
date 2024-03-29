@@ -2,15 +2,17 @@ package com.ldf.springprak14.Service;
 
 import com.ldf.springprak14.Entity.Market;
 import com.ldf.springprak14.Entity.Product;
-import com.ldf.springprak14.Repo.ProductRepository;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.Query;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Service;
-
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -63,4 +65,30 @@ public class ProductService {
             e.printStackTrace();
         }
     }
+
+    public List filterProducts(String name, Integer price) {
+        try {
+            Session session = sessionFactory.openSession(); // Получаем объект Session
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder(); // Используем его для получения CriteriaBuilder
+            CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
+            Root<Product> root = criteriaQuery.from(Product.class);
+            List<Predicate> predicates = new ArrayList<>();
+            if (name != null) {
+                predicates.add(criteriaBuilder.equal(root.get("name"), name));
+            }
+            if (price != null) {
+                predicates.add(criteriaBuilder.equal(root.get("price"), price));
+            }
+
+            criteriaQuery.select(root).where(predicates.toArray(new Predicate[0]));
+            Query query = session.createQuery(criteriaQuery);
+            return query.getResultList();
+//            return session.createQuery((CriteriaDelete) criteriaQuery).getResultList();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+
 }

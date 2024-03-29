@@ -41,4 +41,9 @@ public class ProductController {
     public Market getMarketByProduct(@PathVariable Long productId) {
         return productService.getMarketByProduct(productId);
     }
+
+    @GetMapping("/filter")
+    public List filterProducts(@RequestParam(required = false) String name, @RequestParam(required = false) Integer price){
+        return productService.filterProducts(name, price);
+    }
 }

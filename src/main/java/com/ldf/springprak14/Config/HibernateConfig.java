@@ -4,8 +4,9 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
@@ -18,18 +19,22 @@ public class HibernateConfig {
     @Autowired
     private DataSource dataSource;
 
-//    @Bean
-//    public SessionFactory sessionFactory() {
-//        LocalSessionFactoryBuilder builder = new LocalSessionFactoryBuilder(dataSource);
-//        builder.scanPackages("com.ldf.springprak14.Entity")
-//                .addProperties(hibernateProperties());
-//        return builder.buildSessionFactory();
-//    }
+    @Bean
+    @Primary
+    public LocalSessionFactoryBean sessionFactory() {
+        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+        sessionFactory.setDataSource(dataSource);
+        sessionFactory.setPackagesToScan("com.ldf.springprak14.Entity");
+        sessionFactory.setHibernateProperties(hibernateProperties());
+        return sessionFactory;
+    }
 
-//    @Bean
-//    public HibernateTransactionManager transactionManager() {
-//        return new HibernateTransactionManager(sessionFactory());
-//    }
+    @Bean
+    public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
+        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+        transactionManager.setSessionFactory(sessionFactory);
+        return transactionManager;
+    }
 
     private Properties hibernateProperties() {
         Properties properties = new Properties();
