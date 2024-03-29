@@ -1,9 +1,12 @@
 package com.ldf.springprak14.Entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 
 @Entity
 @Table(name="products")
+@Data
 public class Product {
 
     @Id
@@ -13,30 +16,9 @@ public class Product {
     private String name;
     private Integer price;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="market_id")
+    @JsonIgnore // для исключения циклической ссылки
+    private Market market;
 
-    public Product(Long id, String name, Integer price) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-    }
-
-    public Product() {
-
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
 }

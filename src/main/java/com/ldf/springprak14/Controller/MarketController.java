@@ -1,6 +1,7 @@
 package com.ldf.springprak14.Controller;
 
 import com.ldf.springprak14.Entity.Market;
+import com.ldf.springprak14.Entity.Product;
 import com.ldf.springprak14.Service.MarketService;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +13,11 @@ import java.util.List;
 public class MarketController {
 //    private List<Market> markets = new ArrayList<>();
 
-    private MarketService marketService;
+    private final MarketService marketService;
+
+    public MarketController(MarketService marketService) {
+        this.marketService = marketService;
+    }
 
     @PostMapping("/add")
     public Market createMarket(@RequestBody Market market) {
@@ -29,4 +34,13 @@ public class MarketController {
         return marketService.getAllMarkets();
     }
 
+    @GetMapping("/{marketId}/products")
+    public List<Product> getProductsByMarket(@PathVariable Long marketId) {
+        return marketService.getProductsByMarket(marketId);
+    }
+
+    @PostMapping("/{marketId}/addProduct/{productId}")
+    public void addProductToMarket(@PathVariable Long marketId, @PathVariable Long productId) {
+        marketService.addProductToMarket(marketId, productId);
+    }
 }
