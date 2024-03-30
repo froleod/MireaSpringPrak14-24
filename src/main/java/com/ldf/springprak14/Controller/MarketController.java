@@ -11,8 +11,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/markets")
 public class MarketController {
-//    private List<Market> markets = new ArrayList<>();
-
     private final MarketService marketService;
 
     public MarketController(MarketService marketService) {
@@ -31,7 +29,7 @@ public class MarketController {
 
     @GetMapping("/all")
     public List<Market> getAllMarkets() {
-        return marketService.getAllMarkets();
+        return marketService.findAll();
     }
 
     @GetMapping("/{marketId}/products")

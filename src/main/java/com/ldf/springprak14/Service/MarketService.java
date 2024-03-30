@@ -3,12 +3,9 @@ package com.ldf.springprak14.Service;
 import com.ldf.springprak14.Entity.Market;
 import com.ldf.springprak14.Entity.Product;
 import com.ldf.springprak14.Repo.MarketRepository;
-import jakarta.annotation.PostConstruct;
+import com.ldf.springprak14.Repo.ProductRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,51 +13,49 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class MarketService {
-    private final SessionFactory sessionFactory;
-    private Session session;
-
-    @PostConstruct
-    public void init() {
-        session = sessionFactory.openSession();
-    }
+    private final MarketRepository marketRepository;
+    private final ProductRepository productRepository;
 
     public Market createMarket(Market market){
-        session.beginTransaction();
-        session.save(market);
-        session.getTransaction().commit();
-        return market;
+        return marketRepository.save(market);
     }
 
-    public List<Market> getAllMarkets(){
-        return session.createQuery("from Market", Market.class).getResultList();
+    public List<Market> findAll(){
+        return marketRepository.findAll();
+    }
+
+    public Market getMarketById(Long id){
+        return marketRepository.findById(id).orElse(null);
+    }
+
+    public List<Market> findMarketByName(String name){
+        return marketRepository.findMarketByName(name);
+    }
+
+    public List<Market> findMarketByAddress(String address){
+        return marketRepository.findMarketByAddress(address);
     }
 
     public void deleteMarket(Long id){
-        session.beginTransaction();
-        Market market = session.get(Market.class, id);
-        if (market != null) {
-            session.detach(market);
-        }
-        session.getTransaction().commit();
+        marketRepository.deleteById(id);
     }
 
     public List<Product> getProductsByMarket(Long marketId) {
-        Market market = session.get(Market.class, marketId);
-        return market != null ? market.getProducts() : null;
+        Market market = marketRepository.findById(marketId).orElse(null);
+        if (market != null) {
+            return market.getProducts();
+        }
+        return null;
     }
 
-    public void addProductToMarket(Long productId, Long marketId) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            Product product = session.get(Product.class, productId);
-            Market market = session.get(Market.class, marketId);
-            if (product != null && market != null) {
-                product.setMarket(market);
-                session.merge(product);
-            }
-            transaction.commit();
-        } catch (HibernateException e) {
-            e.printStackTrace();
+    @Transactional
+    public void addProductToMarket(Long marketId, Long productId) {
+        Market market = marketRepository.findById(marketId).orElse(null);
+        Product product = productRepository.findById(productId).orElse(null);
+        if (market != null && product != null) {
+            product.setMarket(market);
+            market.getProducts().add(product);
+            marketRepository.save(market);
         }
     }
 }

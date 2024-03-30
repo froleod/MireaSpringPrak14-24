@@ -6,11 +6,11 @@ import com.ldf.springprak14.Service.ProductService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-//    private List<Product> products = new ArrayList<>();
 
     private final ProductService productService;
 
@@ -26,6 +26,11 @@ public class ProductController {
     @GetMapping("/all")
     public List<Product> getAllProducts(){
         return productService.getAllProducts();
+    }
+
+    @GetMapping("{productId}")
+    public Optional<Product> getProductById(@PathVariable Long productId){
+        return productService.getProductById(productId);
     }
 
     @DeleteMapping("/delete/{index}")

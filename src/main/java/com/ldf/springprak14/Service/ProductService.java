@@ -2,93 +2,63 @@ package com.ldf.springprak14.Service;
 
 import com.ldf.springprak14.Entity.Market;
 import com.ldf.springprak14.Entity.Product;
-import jakarta.annotation.PostConstruct;
-import jakarta.persistence.Query;
-import jakarta.persistence.criteria.*;
+import com.ldf.springprak14.Repo.MarketRepository;
+import com.ldf.springprak14.Repo.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-    private final SessionFactory sessionFactory;
-    private Session session;
+    private final ProductRepository productRepository;
+    private final MarketRepository marketRepository;
 
-    @PostConstruct
-    public void init() {
-        session = sessionFactory.openSession();
+    public Product createProduct(Product product) {
+        return productRepository.save(product);
     }
 
-    public Product createProduct(Product product){
-        session.beginTransaction();
-        session.persist(product);
-        session.getTransaction().commit();
-        return product;
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 
-    public List<Product> getAllProducts(){
-        return session.createQuery("from Product", Product.class).getResultList();
+    public Optional<Product> getProductById(Long id) {
+        return productRepository.findById(id);
     }
 
-    public void deleteProduct(Long id){
-        session.beginTransaction();
-        Product product = session.get(Product.class, id);
-        if (product != null) {
-            session.detach(product);
-        }
-        session.getTransaction().commit();
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
     }
 
     public Market getMarketByProduct(Long productId) {
-        Product product = session.get(Product.class, productId);
-        return product != null ? product.getMarket() : null;
+        Optional<Product> productOptional = productRepository.findById(productId);
+        return productOptional.map(Product::getMarket).orElse(null);
     }
 
     public void addProductToMarket(Long productId, Long marketId) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            Product product = session.get(Product.class, productId);
-            Market market = session.get(Market.class, marketId);
-            if (product != null && market != null) {
-                market.getProducts().add(product);
-                session.merge(market);
-            }
-            transaction.commit();
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        Optional<Product> productOptional = productRepository.findById(productId);
+        Optional<Market> marketOptional = marketRepository.findById(marketId);
+        if (productOptional.isPresent() && marketOptional.isPresent()) {
+            Product product = productOptional.get();
+            Market market = marketOptional.get();
+            product.setMarket(market);
+            market.getProducts().add(product);
+            productRepository.save(product);
+            marketRepository.save(market);
         }
     }
 
-    public List filterProducts(String name, Integer price) {
-        try {
-            Session session = sessionFactory.openSession(); // Получаем объект Session
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder(); // Используем его для получения CriteriaBuilder
-            CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
-            Root<Product> root = criteriaQuery.from(Product.class);
-            List<Predicate> predicates = new ArrayList<>();
-            if (name != null) {
-                predicates.add(criteriaBuilder.equal(root.get("name"), name));
-            }
-            if (price != null) {
-                predicates.add(criteriaBuilder.equal(root.get("price"), price));
-            }
-
-            criteriaQuery.select(root).where(predicates.toArray(new Predicate[0]));
-            Query query = session.createQuery(criteriaQuery);
-            return query.getResultList();
-//            return session.createQuery((CriteriaDelete) criteriaQuery).getResultList();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-            return Collections.emptyList();
+    // Метод для фильтрации продуктов по имени и цене
+    public List<Product> filterProducts(String name, Integer price) {
+        if (name != null && price != null) {
+            return productRepository.findByNameAndPrice(name, price);
+        } else if (name != null) {
+            return productRepository.findByName(name);
+        } else if (price != null) {
+            return productRepository.findByPrice(price);
+        } else {
+            return productRepository.findAll();
         }
     }
-
-
 }
