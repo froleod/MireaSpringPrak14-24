@@ -14,9 +14,11 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class MarketService {
     private final MarketRepository marketRepository;
     private final ProductRepository productRepository;
+    private final EmailService emailService;
 
     public Market createMarket(Market market){
         log.info("Market:" + market + "was created");
@@ -57,7 +59,6 @@ public class MarketService {
         return null;
     }
 
-    @Transactional
     public void addProductToMarket(Long marketId, Long productId) {
         log.info("Add product with id: " + productId + " to market with id: " + marketId);
         Market market = marketRepository.findById(marketId).orElse(null);
@@ -66,6 +67,7 @@ public class MarketService {
             product.setMarket(market);
             market.getProducts().add(product);
             marketRepository.save(market);
+            emailService.sendEmail("admin@example.com", "Product Added to Market", "Product with ID " + productId + " was added to market with ID " + marketId);
         }
     }
 }

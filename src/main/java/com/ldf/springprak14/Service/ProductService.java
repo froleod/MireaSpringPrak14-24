@@ -4,6 +4,7 @@ import com.ldf.springprak14.Entity.Market;
 import com.ldf.springprak14.Entity.Product;
 import com.ldf.springprak14.Repo.MarketRepository;
 import com.ldf.springprak14.Repo.ProductRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,12 +14,15 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class ProductService {
     private final ProductRepository productRepository;
     private final MarketRepository marketRepository;
+    private final EmailService emailService;
 
     public Product createProduct(Product product) {
         log.info("Product was created");
+        emailService.sendEmail("admin@example.com", "New Product Created", "A new product was created: " + product.getName());
         return productRepository.save(product);
     }
 
