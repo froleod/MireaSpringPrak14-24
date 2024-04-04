@@ -13,3 +13,6 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         hbm2ddl-auto: update
     show-sql: true
+
+export:
+  directory: src/main/java/com/ldf/springprak14/Data

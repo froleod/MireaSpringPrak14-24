@@ -21,4 +21,9 @@ public class Product {
     @JsonIgnore // для исключения циклической ссылки
     private Market market;
 
+    @Override
+    public String toString(){
+        return "Product id: " + id + ", name: " + name + ", price: " + price;
+    }
+
 }

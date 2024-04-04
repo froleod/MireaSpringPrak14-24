@@ -22,5 +22,10 @@ public class Market {
     @OneToMany(mappedBy = "market", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
 
+    @Override
+    public String toString(){
+        return "Market id: " + id + ", name: " + name + ", address: " + address;
+    }
+
 
 }
