@@ -1,5 +1,6 @@
 package com.ldf.springprak14.Config;
 
+import com.ldf.springprak14.Service.MyUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,6 +8,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -25,24 +27,19 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .rememberMe(r -> r.tokenRepository(jdbcTokenRepository()).userDetailsService(userDetailsService(passwordEncoder())).key("uniqueAndSecret"))
-//
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(authorize ->
-//                        authorize
-//                                .requestMatchers("/login").permitAll()
-//                                .anyRequest().authenticated()
-//                )
-//                .sessionManagement(session ->
-//                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                );
-//        return http.build();
-//    }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/registration", "/login").permitAll()
+                        .anyRequest().authenticated())
+                .formLogin(login -> login
+                        .defaultSuccessUrl("/", true)
+                        .permitAll())
+                .build();
+    }
 
 
 
@@ -69,10 +66,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder){
-        UserDetails admin = User.builder().username("admin").password(encoder.encode("admin")).roles("ADMIN").build();
-        UserDetails user = User.builder().username("user").password(encoder.encode("user")).roles("USER").build();
-        return new InMemoryUserDetailsManager(admin, user);
+    public UserDetailsService userDetailsService(){
+//        UserDetails admin = User.builder().username("admin").password(encoder.encode("admin")).roles("ADMIN").build();
+//        UserDetails user = User.builder().username("user").password(encoder.encode("user")).roles("USER").build();
+//        return new InMemoryUserDetailsManager(admin, user);
+        return new MyUserDetailService();
     }
 
     @Bean
@@ -83,7 +81,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService(passwordEncoder()));
+        provider.setUserDetailsService(userDetailsService());
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
