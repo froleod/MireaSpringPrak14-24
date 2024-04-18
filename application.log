@@ -1123,3 +1123,32 @@ jakarta.servlet.ServletException: Circular view path [registration]: would dispa
 127188 [scheduling-1] INFO  c.l.s.Service.SchedulerService – Data was exported
 127188 [scheduling-1] INFO  c.l.s.A.ExecutionTimeLoggerAspect – void com.ldf.springprak14.Service.SchedulerService.scheduledExport() executed in 327 ms
 137974 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean – Closing JPA EntityManagerFactory for persistence unit 'default'
+380  [main] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils – Could not detect default configuration classes for test class [com.ldf.springprak14.SpringPrak14ApplicationTests]: SpringPrak14ApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+507  [main] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper – Found @SpringBootConfiguration com.ldf.springprak14.SpringPrak14Application for test class com.ldf.springprak14.SpringPrak14ApplicationTests
+996  [main] INFO  c.l.s.SpringPrak14ApplicationTests – Starting SpringPrak14ApplicationTests using Java 18.0.2 with PID 1204 (started by main in C:\Users\main\IdeaProjects\SpringPrak14)
+997  [main] INFO  c.l.s.SpringPrak14ApplicationTests – No active profile set, falling back to 1 default profile: "default"
+1998 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate – Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2063 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate – Finished Spring Data repository scanning in 57 ms. Found 3 JPA repository interfaces.
+3177 [main] INFO  o.h.jpa.internal.util.LogHelper – HHH000204: Processing PersistenceUnitInfo [name: default]
+3240 [main] INFO  org.hibernate.Version – HHH000412: Hibernate ORM core version 6.1.4.Final
+3483 [main] WARN  org.hibernate.orm.deprecation – HHH90000021: Encountered deprecated setting [javax.persistence.sharedCache.mode], use [jakarta.persistence.sharedCache.mode] instead
+3859 [main] INFO  SQL dialect – HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+4515 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator – HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+4524 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean – Initialized JPA EntityManagerFactory for persistence unit 'default'
+5218 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration – spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+5687 [main] INFO  o.s.s.w.DefaultSecurityFilterChain – Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@5f8a29ca, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4f93a8f6, org.springframework.security.web.context.SecurityContextHolderFilter@2dbc66f0, org.springframework.security.web.header.HeaderWriterFilter@11a29c0, org.springframework.web.filter.CorsFilter@492d38a2, org.springframework.security.web.authentication.logout.LogoutFilter@723f8990, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@6f53295e, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@1d7f0cd0, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@3fc2e100, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@47800bd7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4c57ca10, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@31885b4b, org.springframework.security.web.access.ExceptionTranslationFilter@62b0792, org.springframework.security.web.access.intercept.AuthorizationFilter@2f09907]
+6146 [main] INFO  c.l.s.SpringPrak14ApplicationTests – Started SpringPrak14ApplicationTests in 5.439 seconds (process running for 6.665)
+6218 [scheduling-1] INFO  c.l.s.Service.MarketService – Find all markets
+6435 [scheduling-1] INFO  c.l.s.A.ExecutionTimeLoggerAspect – List com.ldf.springprak14.Service.MarketService.findAll() executed in 215 ms
+6491 [scheduling-1] INFO  c.l.s.Service.ProductService – Find all products
+6512 [scheduling-1] INFO  c.l.s.A.ExecutionTimeLoggerAspect – List com.ldf.springprak14.Service.ProductService.getAllProducts() executed in 22 ms
+6517 [scheduling-1] INFO  c.l.s.Service.SchedulerService – Data was exported
+6517 [scheduling-1] INFO  c.l.s.A.ExecutionTimeLoggerAspect – void com.ldf.springprak14.Service.SchedulerService.scheduledExport() executed in 359 ms
+6520 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean – Closing JPA EntityManagerFactory for persistence unit 'default'
+190  [main] INFO  c.l.s.Service.MarketService – Market:Market id: null, name: null, address: nullwas created
+190  [main] INFO  c.l.s.Service.MarketService – Market:Market id: null, name: null, address: nullwas created
+196  [main] INFO  c.l.s.Service.ProductService – Product was created
+186  [main] INFO  c.l.s.Service.MarketService – Find all markets
+244  [main] INFO  c.l.springprak14.Service.AppService – User User(id=null, username=testuser, password=encodedPassword, roles=null) is saved!
+199  [main] INFO  c.l.s.Service.MarketService – Market:Market id: null, name: null, address: nullwas created
+217  [main] INFO  c.l.s.Service.MarketService – Find all markets
